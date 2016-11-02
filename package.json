@@ -20,6 +20,7 @@
   "dependencies": {
     "cheerio": "^0.22.0",
     "colors": "^1.1.2",
+    "diff": "^3.0.1",
     "jsdiff": "^1.1.1",
     "marky-markdown": "^9.0.1",
     "request": "^2.76.0",
