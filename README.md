@@ -18,3 +18,7 @@ for example:
 ```
 index.js --package marky-markdown
 ```
+
+this command generates a `diff.diff` file. grab that content and throw it in a [gist]! 
+
+[gist]: https://gist.github.com
