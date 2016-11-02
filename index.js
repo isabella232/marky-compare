@@ -22,7 +22,7 @@ var get_readmes = function(pkg, callback) {
 
 var get_npm = function(pkg_details) {
   var npm_markup = marky(pkg_details.readme);
-  fs.writeFile('./npm_markup.html', npm_markup, 'utf-8');
+  fs.writeFileSync('./npm_markup.html', npm_markup, 'utf-8');
 };
 
 var get_github = function(pkg_details) {
@@ -32,7 +32,7 @@ var get_github = function(pkg_details) {
     var url = make_github_url(repo.url);
     request(url, function(err, res, body) {
       var $ = cheerio.load(body);
-      fs.writeFile('./github_markup.html', $('article.markdown-body').html(), 'utf-8');
+      fs.writeFileSync('./github_markup.html', $('article.markdown-body').html(), 'utf-8');
     });
   }
 };
@@ -55,17 +55,8 @@ var diff_readmes = function() {
   var npm = fs.readFileSync('./npm_markup.html', 'utf-8');
   var github = fs.readFileSync('./github_markup.html', 'utf-8');
 
-  var diff = jsdiff.diffChars(npm, github);
- 
-  diff.forEach(function(part){
-    // green for additions, red for deletions 
-    // grey for common parts 
-    var color = part.added ? 'green' :
-      part.removed ? 'red' : 'grey';
-    process.stderr.write(part.value[color]);
-  });
- 
-  console.log();
+  var diff = jsdiff.createTwoFilesPatch('./github_markup.html', './npm_markup.html', github, npm, 'github', 'npm');
+  fs.writeFileSync('./diff.md', diff);
 };
 
 get_readmes(pkg, diff_readmes);
