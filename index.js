@@ -55,7 +55,7 @@ var diff_readmes = function() {
   var npm = fs.readFileSync('./npm_markup.html', 'utf-8');
   var github = fs.readFileSync('./github_markup.html', 'utf-8');
 
-  var diff = jsdiff.createTwoFilesPatch('./github_markup.html', './npm_markup.html', github, npm, 'github', 'npm');
+  var diff = jsdiff.createTwoFilesPatch('./github_markup.html', './npm_markup.html', github, npm, 'github', 'npm', {ignoreWhitespace: true});
   fs.writeFileSync('./diff.diff', diff);
 };
 
