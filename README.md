@@ -1,5 +1,5 @@
 # marky-compare
-> check how marky's markup compares to github's
+> check how npm's markup compares to github's
 
 ## up and running
 
@@ -13,12 +13,14 @@
 index.js --package <package-name>
 ```
 
+this command generates a `diff.diff` file. grab that content and throw it in a [gist]!
+
 for example:
 
 ```
 index.js --package marky-markdown
 ```
 
-this command generates a `diff.diff` file. grab that content and throw it in a [gist]! 
+... generates [this file](https://gist.github.com/ashleygwilliams/9250718913c86e6c44f49e219baada45).
 
 [gist]: https://gist.github.com
