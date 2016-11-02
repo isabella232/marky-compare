@@ -6,8 +6,6 @@ const argv = require('yargs').argv;
 const request = require('request');
 const marky = require('marky-markdown');
 const cheerio = require('cheerio');
-
-require('colors')
 const jsdiff = require('diff');
 
 var pkg = argv.package;
