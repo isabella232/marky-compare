@@ -56,7 +56,7 @@ var diff_readmes = function() {
   var github = fs.readFileSync('./github_markup.html', 'utf-8');
 
   var diff = jsdiff.createTwoFilesPatch('./github_markup.html', './npm_markup.html', github, npm, 'github', 'npm');
-  fs.writeFileSync('./diff.md', diff);
+  fs.writeFileSync('./diff.diff', diff);
 };
 
 get_readmes(pkg, diff_readmes);
