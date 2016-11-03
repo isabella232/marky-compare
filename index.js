@@ -6,6 +6,7 @@ const argv = require('yargs').argv;
 const request = require('request');
 const marky = require('marky-markdown');
 const cheerio = require('cheerio');
+const beautify = require('js-beautify');
 const jsdiff = require('diff');
 
 var pkg = argv.package;
@@ -19,8 +20,8 @@ var get_readmes = function(pkg, callback) {
 };
 
 var get_npm = function(pkg_details) {
-  var npm_markup = marky(pkg_details.readme);
-  fs.writeFileSync('./npm_markup.html', npm_markup, 'utf-8');
+  var html = beautify(marky(pkg_details.readme), { indent_size: 2 });
+  fs.writeFileSync('./npm_markup.html', html, 'utf-8');
 };
 
 var get_github = function(pkg_details) {
@@ -30,7 +31,8 @@ var get_github = function(pkg_details) {
     var url = make_github_url(repo.url);
     request(url, function(err, res, body) {
       var $ = cheerio.load(body);
-      fs.writeFileSync('./github_markup.html', $('article.markdown-body').html(), 'utf-8');
+      var html = beautify($('article.markdown-body').html(), { indent_size: 2 });
+      fs.writeFileSync('./github_markup.html', html, 'utf-8');
     });
   }
 };
