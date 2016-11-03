@@ -2,6 +2,8 @@
 
 const fs = require('fs');
 
+const Promise = require('bluebird');
+
 const argv = require('yargs').argv;
 const request = require('request');
 const marky = require('marky-markdown');
@@ -13,15 +15,21 @@ var pkg = argv.package;
 var get_readmes = function(pkg, callback) {
   request('http://registry.npmjs.org/' + pkg, function (err, res, body) {
     var pkg_details = JSON.parse(body);
-    get_npm(pkg_details);
-    get_github(pkg_details);
-    callback();
+    
+    var github = get_github(pkg_details);
+    var npm = get_npm(pkg_details);
+
+    Promise.join(
+      github,
+      npm
+    ).spread(function(github, npm) {
+      diff_readmes(github, npm); 
+    });
   });
 };
 
 var get_npm = function(pkg_details) {
-  var html = beautify(marky(pkg_details.readme), { indent_size: 2 });
-  fs.writeFileSync('./npm_markup.html', html, 'utf-8');
+  return beautify(marky(pkg_details.readme), { indent_size: 2 });
 };
 
 var get_github = function(pkg_details) {
@@ -31,8 +39,7 @@ var get_github = function(pkg_details) {
     var url = make_github_url(repo.url);
     request(url, function(err, res, body) {
       var $ = cheerio.load(body);
-      var html = beautify($('article.markdown-body').html(), { indent_size: 2 });
-      fs.writeFileSync('./github_markup.html', html, 'utf-8');
+      return beautify($('article.markdown-body').html(), { indent_size: 2 });
     });
   }
 };
@@ -59,4 +66,4 @@ var diff_readmes = function() {
   fs.writeFileSync('./diff.diff', diff);
 };
 
-get_readmes(pkg, diff_readmes);
+get_readmes(pkg);
